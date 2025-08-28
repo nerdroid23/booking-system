@@ -38,8 +38,8 @@ defineProps({
       <h2 class="text-xl font-medium">Or, choose a service first</h2>
       <div class="mt-6 grid grid-cols-2 gap-8 md:grid-cols-5">
         <ServiceCard
-          :service="service"
           v-for="service in services"
+          :service="service"
           :key="service.id"
         />
       </div>
