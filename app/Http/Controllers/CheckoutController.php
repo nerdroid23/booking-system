@@ -12,11 +12,11 @@ use Inertia\Response;
 
 class CheckoutController extends Controller
 {
-    public function __invoke(Service $service, Employee $employee): Response
+    public function __invoke(Service $service, ?Employee $employee = null): Response
     {
         return inertia()->render('checkout/Index', [
             'service' => ServiceData::from($service),
-            'employee' => EmployeeData::from($employee),
+            'employee' => $employee ? EmployeeData::from($employee) : null,
         ]);
     }
 }

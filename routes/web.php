@@ -10,7 +10,7 @@ Route::get('/', [HomeController::class, '__invoke'])->name('home');
 
 Route::get('/employees/{employee:slug}', [EmployeeShowController::class, '__invoke'])->name('employees.show');
 
-Route::get('/checkout/{service:slug}/{employee:slug}', [CheckoutController::class, '__invoke'])
+Route::get('/checkout/{service:slug}/{employee:slug?}', [CheckoutController::class, '__invoke'])
     ->name('checkout')
     ->scopeBindings();
 

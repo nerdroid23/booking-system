@@ -5,7 +5,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
 defineOptions({ layout: Layout });
 defineProps<{
-  employee: Employee;
+  employee: Employee | null;
   service: Service;
 }>();
 </script>
@@ -25,14 +25,19 @@ defineProps<{
       <h2 class="text-2xl font-medium">Here's what you're booking</h2>
       <div class="mt-6 flex space-x-3 bg-slate-100 p-4">
         <img
+          v-if="employee"
           :src="employee.avatar_url"
           class="size-12 rounded-lg"
           alt=""
         />
+        <div
+          v-else
+          class="size-12 rounded-lg bg-slate-200"
+        ></div>
         <div class="flex w-full justify-between">
           <div>
             <div class="font-semibold">{{ service.title }} ({{ service.duration }} mins)</div>
-            <div>{{ employee.name }}</div>
+            <div>{{ employee?.name ?? 'Any employee' }}</div>
           </div>
           <div>{{ service.price }}</div>
         </div>
