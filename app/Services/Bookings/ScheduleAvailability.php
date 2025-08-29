@@ -33,12 +33,20 @@ final class ScheduleAvailability
 
     private function addAvailabilityFromSchedule(CarbonImmutable $date): void
     {
+        if ($date->isPast()) {
+            return;
+        }
+
         $schedule = $this->employee->schedules
             ->where('starts_at', '<=', $date)
             ->where('ends_at', '>=', $date)
             ->first();
 
-        if (! [$startsAt, $endsAt] = $schedule?->getWorkingHoursForDate($date)) {
+        if (! $schedule) {
+            return;
+        }
+
+        if (! [$startsAt, $endsAt] = $schedule->getWorkingHoursForDate($date)) {
             return;
         }
 

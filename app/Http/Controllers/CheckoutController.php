@@ -36,7 +36,7 @@ class CheckoutController extends Controller
             // TODO: Use deferred
             // 'availability' => inertia()->defer(fn () => AvailabilityData::collect($availability)),
             'availability' => AvailabilityData::collect($availability),
-            'date' => $availability->firstAvailableDate()?->date->toDateString(),
+            'date' => '2025-09-01',
             'start' => $request->query('start'),
         ]);
     }

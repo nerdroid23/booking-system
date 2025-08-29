@@ -1,0 +1,7 @@
+:host {
+    --day-width: 60px;
+    --day-height: 60px;
+
+    --color-bg-locked: oklch(0.869 0.02 252.894);
+    --color-fg-accent: oklch(0.623 0.188 259.815);
+}
