@@ -150,5 +150,5 @@ test('it shows multiple employees available for a service', function () {
         ->forPeriod(now()->startOfDay(), now()->endOfDay());
 
     // then
-    expect($availability->first()->slots->first()->availableEmployees)->toHaveCount(2);
+    expect($availability->first()->slots->first()->employees)->toHaveCount(2);
 });

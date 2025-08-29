@@ -1,3 +1,7 @@
+export type Availability = {
+  date: string;
+  slots: Array<Slot>;
+};
 export type Employee = {
   id: number;
   name: string;
@@ -10,4 +14,9 @@ export type Service = {
   slug: string;
   duration: string;
   price: string;
+};
+export type Slot = {
+  datetime: string;
+  time: string;
+  employees: { [key: number]: number };
 };

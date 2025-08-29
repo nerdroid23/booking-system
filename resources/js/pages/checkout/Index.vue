@@ -1,13 +1,47 @@
 <script setup lang="ts">
 import Layout from '@/layouts/HomeLayout.vue';
-import { Employee, Service } from '@/types/generated';
+import { Availability, Employee, Service } from '@/types/generated';
+import { easepick, LockPlugin } from '@easepick/bundle';
+import styles from '@easepick/bundle/dist/index.css?url';
 import { Head, Link } from '@inertiajs/vue3';
+import { onMounted, ref } from 'vue';
 
 defineOptions({ layout: Layout });
-defineProps<{
+
+const props = defineProps<{
+  availability: Array<Availability>;
   employee: Employee | null;
   service: Service;
+  date: string | null;
 }>();
+
+let picker = null;
+const pickerRef = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+  createPicker();
+});
+
+const createPicker = () => {
+  picker = new easepick.create({
+    css: [styles],
+    element: pickerRef?.value as HTMLElement,
+    readonly: true,
+    zIndex: 50,
+    date: props.date ?? new Date(),
+    plugins: [LockPlugin],
+    LockPlugin: {
+      minDate: new Date(),
+      filter(date) {
+        if (Array.isArray(date)) {
+          return true;
+        }
+
+        return !props.availability.find((a) => a.date === date.format('YYYY-MM-DD'));
+      },
+    },
+  });
+};
 </script>
 
 <template>
@@ -46,7 +80,11 @@ defineProps<{
 
     <div>
       <h2 class="text-xl font-medium">1. Choose a date</h2>
-      <div class="mt-6 p-4">Picker</div>
+      <input
+        ref="pickerRef"
+        class="mt-6 w-full border-0 bg-slate-100 p-4 px-6 py-4 text-sm"
+        placeholder="When for?"
+      />
     </div>
 
     <div>

@@ -13,4 +13,9 @@ class DateCollection extends Collection
     {
         return $this->firstWhere(fn (Date $date) => $date->slots->count() >= 1);
     }
+
+    public function hasSlots(): self
+    {
+        return $this->filter(fn (Date $date) => $date->slots->isNotEmpty());
+    }
 }

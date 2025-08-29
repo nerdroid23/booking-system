@@ -6,21 +6,25 @@ namespace App\Services\Bookings;
 
 use App\Models\Employee;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Collection;
 
 final class Slot
 {
-    /** @var Employee[] */
-    public array $availableEmployees = [];
+    /** @var Collection<int, Employee> */
+    public Collection $employees;
 
-    public function __construct(public CarbonImmutable $time) {}
+    public function __construct(public CarbonImmutable $time)
+    {
+        $this->employees = new Collection;
+    }
 
     public function addEmployee(Employee $employee): void
     {
-        $this->availableEmployees[] = $employee;
+        $this->employees->push($employee);
     }
 
     public function hasEmployees(): bool
     {
-        return ! empty($this->availableEmployees);
+        return $this->employees->isNotEmpty();
     }
 }
