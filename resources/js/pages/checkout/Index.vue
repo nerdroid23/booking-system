@@ -2,8 +2,8 @@
 import EasepickCalendar from '@/components/EasepickCalendar.vue';
 import Layout from '@/layouts/HomeLayout.vue';
 import { Availability, Employee, Service, Slot } from '@/types/generated';
-import { Head, Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { onMounted, ref, watch } from 'vue';
 
 defineOptions({ layout: Layout });
 
@@ -16,6 +16,8 @@ const props = defineProps<{
   start: string | null;
 }>();
 
+onMounted(() => setSlots(props.date));
+
 const slots = ref<Slot[]>([]);
 
 const setSlots = (date: string | null) => {
@@ -27,6 +29,33 @@ const setSlots = (date: string | null) => {
   const availability = props.availability?.find((a) => a.date === date);
   slots.value = availability ? Object.values(availability.slots) : [];
 };
+
+const form = useForm<{
+  service_id: number;
+  employee_id: number | null;
+  datetime: string | null;
+  name: string | null;
+  email: string | null;
+}>({
+  service_id: props.service.id,
+  employee_id: props.employee?.id ?? null,
+  datetime: null,
+  name: null,
+  email: null,
+});
+
+watch(
+  () => form.datetime,
+  (datetime) => {
+    if (form.employee_id) {
+      return;
+    }
+
+    const employee = Object.values(slots.value).find((s) => s.datetime === datetime)?.employees[0];
+
+    router.get(route('checkout', [props.service, employee]), {}, { preserveState: true, preserveScroll: true, onSuccess() {} });
+  },
+);
 </script>
 
 <template>
@@ -77,13 +106,16 @@ const setSlots = (date: string | null) => {
       <h2 class="text-xl font-medium">2. Choose a time</h2>
       <div class="mt-6 p-4">
         <div class="grid-col-3 grid gap-8 md:grid-cols-5">
-          <div
+          <button
+            @click="form.datetime = slot.datetime"
             v-for="slot in slots"
             :key="slot.datetime"
+            :class="{ 'border-slate-200 bg-slate-100 font-semibold': form.datetime === slot.datetime }"
             class="cursor-pointer border px-4 py-3 text-center hover:border-slate-200 hover:bg-slate-100 hover:font-semibold"
+            type="button"
           >
             {{ slot.time }}
-          </div>
+          </button>
         </div>
       </div>
     </div>

@@ -21,8 +21,6 @@ const pickerRef = ref<HTMLElement | null>(null);
 onMounted(() => {
   createPicker();
 
-  $emit('updateSlots', props.date);
-
   picker?.on('select', (event: CustomEvent) => {
     const date = event.detail.date?.format('YYYY-MM-DD') ?? null;
     $emit('updateSlots', date);

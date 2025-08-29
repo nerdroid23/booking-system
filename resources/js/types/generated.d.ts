@@ -18,5 +18,5 @@ export type Service = {
 export type Slot = {
   datetime: string;
   time: string;
-  employees: { [key: number]: number };
+  employees: { [key: number]: string };
 };

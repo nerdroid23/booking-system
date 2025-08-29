@@ -17,7 +17,7 @@ final class SlotData extends Data
         public CarbonImmutable $datetime,
         #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'H:i')]
         public CarbonImmutable $time,
-        /** @var array<int, int> $employees */
+        /** @var array<int, string> $employees */
         public array $employees,
     ) {}
 
@@ -26,7 +26,7 @@ final class SlotData extends Data
         return new self(
             datetime: $slot->time,
             time: $slot->time,
-            employees: $slot->employees->pluck('id')->all(),
+            employees: $slot->employees->pluck('slug')->all(),
         );
     }
 }

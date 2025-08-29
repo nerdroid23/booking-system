@@ -41,6 +41,7 @@ defineProps({
           v-for="service in services"
           :service="service"
           :key="service.id"
+          :href="route('checkout', { service })"
         />
       </div>
     </div>
