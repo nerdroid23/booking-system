@@ -1,3 +1,12 @@
+export type Appointment = {
+  uuid: string;
+  employee: Employee;
+  service: Service;
+  date: string;
+  starts_at: string;
+  ends_at: string;
+  canceled: boolean;
+};
 export type Availability = {
   date: string;
   slots: Array<Slot>;

@@ -21,4 +21,11 @@ final class Date
     {
         $this->slots->push($slot);
     }
+
+    public function containsSlot(string $time): bool
+    {
+        return $this->slots->contains(
+            fn (Slot $slot) => $slot->time->toTimeString() === $time
+        );
+    }
 }

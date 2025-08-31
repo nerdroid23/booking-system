@@ -78,7 +78,7 @@ const createPicker = () => {
 <template>
   <input
     ref="pickerRef"
-    class="mt-6 w-full border-0 bg-slate-100 p-4 px-6 py-4 text-sm"
+    class="w-full border-0 bg-slate-100 px-6 py-4 text-sm"
     placeholder="When for?"
   />
 </template>

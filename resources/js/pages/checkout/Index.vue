@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import EasepickCalendar from '@/components/EasepickCalendar.vue';
+import InputError from '@/components/InputError.vue';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import Layout from '@/layouts/HomeLayout.vue';
 import { Availability, Employee, Service, Slot } from '@/types/generated';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { LoaderCircle } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
 
 defineOptions({ layout: Layout });
@@ -40,8 +44,8 @@ const form = useForm<{
   service_id: props.service.id,
   employee_id: props.employee?.id ?? null,
   datetime: null,
-  name: null,
-  email: null,
+  name: 'john doe',
+  email: 'jdoe@mail.com',
 });
 
 watch(
@@ -53,7 +57,17 @@ watch(
 
     const employee = Object.values(slots.value).find((s) => s.datetime === datetime)?.employees[0];
 
-    router.get(route('checkout', [props.service, employee]), {}, { preserveState: true, preserveScroll: true, onSuccess() {} });
+    router.get(
+      route('checkout', [props.service, employee]),
+      {},
+      {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess() {
+          form.employee_id = props.employee?.id ?? null;
+        },
+      },
+    );
   },
 );
 </script>
@@ -68,10 +82,13 @@ watch(
     &larr; Go back
   </Link>
 
-  <form class="mt-6 space-y-10">
+  <form
+    @submit.prevent="form.post(route('appointments.store'), { preserveScroll: true })"
+    class="mt-6 space-y-10"
+  >
     <div>
       <h2 class="text-2xl font-medium">Here's what you're booking</h2>
-      <div class="mt-6 flex space-x-3 bg-slate-100 p-4">
+      <div class="mt-6 flex space-x-3 bg-slate-100 px-6 py-4">
         <img
           v-if="employee"
           :src="employee.avatar_url"
@@ -94,20 +111,31 @@ watch(
 
     <div>
       <h2 class="text-xl font-medium">1. Choose a date</h2>
-      <EasepickCalendar
-        :availability="availability"
-        :date="date"
-        :start="start"
-        @updateSlots="setSlots"
-      />
+      <div class="mt-6">
+        <EasepickCalendar
+          :availability="availability"
+          :date="date"
+          :start="start"
+          @updateSlots="setSlots"
+        />
+      </div>
     </div>
 
-    <div>
+    <div class="space-y-6">
       <h2 class="text-xl font-medium">2. Choose a time</h2>
-      <div class="mt-6 p-4">
+      <div v-if="form.errors.datetime">
+        <InputError :message="form.errors.datetime" />
+      </div>
+
+      <div>
         <div class="grid-col-3 grid gap-8 md:grid-cols-5">
           <button
-            @click="form.datetime = slot.datetime"
+            @click="
+              () => {
+                form.datetime = slot.datetime;
+                form.clearErrors();
+              }
+            "
             v-for="slot in slots"
             :key="slot.datetime"
             :class="{ 'border-slate-200 bg-slate-100 font-semibold': form.datetime === slot.datetime }"
@@ -120,9 +148,59 @@ watch(
       </div>
     </div>
 
-    <div>
+    <div v-if="form.datetime">
       <h2 class="text-xl font-medium">3. Enter your details</h2>
-      <div class="mt-6 p-4">Slots</div>
+      <div class="mt-6">
+        <div class="grid gap-6">
+          <div>
+            <Label
+              for="name"
+              class="sr-only"
+              >Enter your name</Label
+            >
+            <input
+              v-model="form.name"
+              id="name"
+              type="text"
+              class="w-full border-0 bg-slate-100 p-4 px-6 py-4 text-sm"
+              required
+              placeholder="Enter your name"
+            />
+            <InputError :message="form.errors.name" />
+          </div>
+
+          <div>
+            <Label
+              for="email"
+              class="sr-only"
+              >Enter your email</Label
+            >
+            <input
+              v-model="form.email"
+              type="email"
+              class="w-full border-0 bg-slate-100 px-6 py-4 text-sm"
+              required
+              autocomplete="email"
+              placeholder="Enter your email"
+            />
+            <InputError :message="form.errors.email" />
+          </div>
+        </div>
+      </div>
     </div>
+
+    <Button
+      v-if="form.datetime"
+      :disabled="form.processing"
+      class="mt-4 h-12 w-full rounded-none"
+      size="lg"
+      type="submit"
+    >
+      <LoaderCircle
+        v-if="form.processing"
+        class="h-4 w-4 animate-spin"
+      />
+      Book an appointment
+    </Button>
   </form>
 </template>

@@ -7,7 +7,7 @@ namespace App\Services\Bookings;
 use App\Models\Appointment;
 use App\Models\Employee;
 use App\Models\Service;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Spatie\Period\Boundaries;
 use Spatie\Period\Period;

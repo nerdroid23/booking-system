@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EmployeeShowController;
 use App\Http\Controllers\HomeController;
@@ -13,6 +14,10 @@ Route::get('/employees/{employee:slug}', [EmployeeShowController::class, '__invo
 Route::get('/checkout/{service:slug}/{employee:slug?}', [CheckoutController::class, '__invoke'])
     ->name('checkout')
     ->scopeBindings();
+
+Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+Route::get('/appointments/{appointment:uuid}', [AppointmentController::class, 'show'])->name('appointments.show');
+Route::delete('/appointments/{appointment:uuid}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');

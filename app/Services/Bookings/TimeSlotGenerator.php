@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services\Bookings;
 
+use Carbon\Carbon;
 use Carbon\CarbonPeriodImmutable;
-use Illuminate\Support\Carbon;
 
 final readonly class TimeSlotGenerator
 {
