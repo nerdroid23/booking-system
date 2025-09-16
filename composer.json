@@ -17,7 +17,9 @@
         "spatie/laravel-data": "^4.17",
         "spatie/laravel-typescript-transformer": "^2.5",
         "spatie/period": "^2.4",
-        "tightenco/ziggy": "^2.4"
+        "tightenco/ziggy": "^2.4",
+        "ext-bcmath": "*",
+        "ext-intl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
