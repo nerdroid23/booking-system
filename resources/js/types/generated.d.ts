@@ -11,6 +11,7 @@ export type Availability = {
   date: string;
   slots: Array<Slot>;
 };
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type Employee = {
   id: number;
   name: string;
